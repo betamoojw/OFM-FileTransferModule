@@ -1,3 +1,4 @@
+#ifndef OPENKNX_FILE_TRANSFER_IGNORE
 #include "FileTransferModule.h"
 #include "versions.h"
 #include <PicoOTA.h>
@@ -581,3 +582,4 @@ void FileTransferModule::cmdFileDownload(uint8_t length, uint8_t *data, uint8_t 
 }
 
 FileTransferModule openknxFileTransferModule;
+#endif
