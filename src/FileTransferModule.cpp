@@ -1,7 +1,7 @@
 #ifndef OPENKNX_FILE_TRANSFER_IGNORE
-#include "FileTransferModule.h"
-#include "versions.h"
-#include <PicoOTA.h>
+    #include "FileTransferModule.h"
+    #include "versions.h"
+    #include <PicoOTA.h>
 
 // Give your Module a name
 // it will be displayed when you use the method log("Hello")
@@ -544,13 +544,13 @@ void FileTransferModule::cmdFileDownload(uint8_t length, uint8_t *data, uint8_t 
         if (checkOpenFile(resultData, resultLength) || checkOpenDir(resultData, resultLength)) return;
 
         _size = data[2];
-        resultLength = 1;
 
         if (data[2] > resultLength)
         {
             logIndentUp();
             logErrorP("Requested pkg is greater than max resultLength");
             logIndentDown();
+            resultLength = 1;
             pushByte(0x4, resultData);
             return;
         }
@@ -558,10 +558,11 @@ void FileTransferModule::cmdFileDownload(uint8_t length, uint8_t *data, uint8_t 
         _file = LittleFS.open((char *)(data + 3), "r");
         if (!_file)
         {
-            pushByte(0x42, resultData);
             logIndentUp();
             logErrorP("File can't be opened");
             logIndentDown();
+            resultLength = 1;
+            pushByte(0x42, resultData);
             return;
         }
         _fileOpen = true;
