@@ -354,8 +354,8 @@ void FileTransferModule::cmdModuleVersion(uint8_t length, uint8_t *data, uint8_t
     resultData[1] = _major & 0xFF;
     resultData[2] = _minor >> 8;
     resultData[3] = _minor & 0xFF;
-    resultData[4] = _build >> 8;
-    resultData[5] = _build & 0xFF;
+    resultData[4] = _revision >> 8;
+    resultData[5] = _revision & 0xFF;
 }
 
 void FileTransferModule::cmdFwUpdate(uint8_t length, uint8_t *data, uint8_t *resultData, uint8_t &resultLength)
