@@ -153,7 +153,6 @@ struct FtcDeviceInfo
     uint16_t ftmVersion = 0;
     uint16_t maxApdu = 0;      // PID_MAX_APDU_LENGTH of the TARGET (0 = it did not report one)
     uint8_t devControl = 0;    bool haveDevControl = false; // bit0 safe state · bit2 verify mode · bit1 own addr sent
-    uint16_t downloads = 0;    bool haveDownloads = false;  // ETS download counter; 0 = never programmed OR not persisted by the target (the stack keeps it in RAM)
     bool isRouter = false;                                  // a Router Object was found -> the two rows below apply
     uint8_t lineStatus = 0;    bool haveLineStatus = false;
     uint16_t routerApdu = 0;   bool haveRouterApdu = false;
@@ -801,8 +800,7 @@ class FileTransferClient : public OpenKNX::Module
     uint16_t _devApdu = 0;    // PID_MAX_APDU_LENGTH of the target
     bool _devHasApdu = false;
     uint8_t _devCtrl = 0;
-    uint16_t _devDownloads = 0;
-    bool _devHasCtrl = false, _devHasDownloads = false;
+    bool _devHasCtrl = false;
     uint8_t _devBcuRunState = 0xFF, _devBcuPei = 0xFF, _devBcuRunError = 0xFF; // BCU1/BCU2 memory-map identity
     uint8_t _devBcuMfr = 0, _devBcuApp[3] = {0};                               // BCU manufacturer + application id (BCD)
     bool _devHasBcuApp = false;
