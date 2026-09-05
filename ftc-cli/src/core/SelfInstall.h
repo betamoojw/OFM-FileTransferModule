@@ -15,6 +15,7 @@
 #include <cctype>
 #include <cstdio>
 #include <cstdlib>
+#include <cerrno>
 #include <cstring>
 #include <filesystem>
 #include <fstream>
@@ -208,6 +209,57 @@ inline int semverCmp(const std::string& a, const std::string& b, bool& ok)
     return 0;
 }
 
+/**
+ * @brief Copy a file byte by byte, returning a message on failure.
+ * @details Not std::filesystem::copy_file: libstdc++ implements it over copy_file_range/sendfile, which
+ *          answers EINVAL on older kernels and on some filesystems -- and the Raspberry Pi build carries its
+ *          own C++ library from the zig cross-build, where that path is not dependable. Same reason the
+ *          directory is created by hand. A plain read/write loop works everywhere and costs nothing here.
+ */
+inline bool copyFileBytes(const std::string& from, const std::string& to, std::string& err)
+{
+    std::FILE* in = std::fopen(from.c_str(), "rb");
+    if (!in)
+    {
+        err = from + ": " + std::strerror(errno);
+        return false;
+    }
+    std::FILE* out = std::fopen(to.c_str(), "wb");
+    if (!out)
+    {
+        err = to + ": " + std::strerror(errno);
+        std::fclose(in);
+        return false;
+    }
+    char buf[64 * 1024];
+    bool ok = true;
+    for (;;)
+    {
+        const size_t n = std::fread(buf, 1, sizeof(buf), in);
+        if (n == 0)
+        {
+            ok = std::ferror(in) == 0;
+            if (!ok) err = from + ": " + std::strerror(errno);
+            break;
+        }
+        if (std::fwrite(buf, 1, n, out) != n)
+        {
+            err = to + ": " + std::strerror(errno);
+            ok = false;
+            break;
+        }
+    }
+    if (ok && std::fflush(out) != 0)
+    {
+        err = to + ": " + std::strerror(errno);
+        ok = false;
+    }
+    std::fclose(in);
+    std::fclose(out);
+    if (!ok) std::remove(to.c_str()); // never leave a half-written binary behind
+    return ok;
+}
+
 /** @brief Best-effort raw output of "<bin> --version" (path safely quoted; empty on any failure). */
 inline std::string readBinaryVersionRaw(const fs::path& bin)
 {
@@ -305,10 +357,10 @@ inline InstallResult commitInstall(const InstallPlan& plan)
     tmp += ".new";
     fs::remove(tmp, ec);
     ec.clear();
-    fs::copy_file(plan.self, tmp, fs::copy_options::overwrite_existing, ec);
-    if (ec)
+    std::string cpErr;
+    if (!copyFileBytes(plan.self.string(), tmp.string(), cpErr))
     {
-        r.note = "copy to '" + tmp.string() + "' failed: " + ec.message();
+        r.note = "copy to '" + tmp.string() + "' failed: " + cpErr;
 #ifndef _WIN32
         r.note += " (insufficient permissions? for a system dir use: sudo ftc install --system)";
 #endif
