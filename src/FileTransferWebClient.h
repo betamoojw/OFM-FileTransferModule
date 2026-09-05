@@ -46,12 +46,17 @@ class FileTransferWebClient
      *          would find nothing. Called on every status poll while the scan runs.
      */
     void collectScanHits();
+    bool _scanWasRunning = false; // a sweep is in progress, whoever started it
+    bool _scanDone = false;       // the last sweep reached its end
+    uint32_t _scanLastDone = 0;   // last progress pair, kept so the bar does not snap back to 0 %
+    uint32_t _scanLastTotal = 0;  // status.done/total are 32 bit
 
     struct ScanHit
     {
         uint16_t pa = 0;
         uint16_t mask = 0;   // the sweep records it per hit -- reliable, unlike the late OpenKNX flag
         bool openKnx = false;
+        char okId[20] = {0};  // "<order> <version>" from the FULL probe; empty = flagged but not identified
     };
     std::vector<ScanHit> _scanHits;      // what the running/last sweep found
     static constexpr size_t SCAN_HIT_MAX = 64;

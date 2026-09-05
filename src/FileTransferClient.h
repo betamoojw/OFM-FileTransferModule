@@ -124,6 +124,9 @@ struct FtcEntry
     bool hasInfo = false;   // ll fills size (+crc); ls leaves them 0
     bool hasCrc = false;    // 0x00 answer had a CRC; 0x01 (SD/EFC default) is size-only -> CRC shown as n/a
     bool isOpenKnx = false; // scan `openknx`/`info` probe: this device's manufacturer id == 0x00FA
+    // Order number + version of an OpenKNX device, filled by the FULL (`info`) scan probe only, so a
+    // listing can name the device instead of just flagging it. Empty for every other use of this struct.
+    char okId[20] = {0};
 };
 
 // One queued output line for the cooperative drain, so no loop() pass blocks on USB-CDC.

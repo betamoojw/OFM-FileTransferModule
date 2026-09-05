@@ -95,7 +95,31 @@ void FileTransferWebClient::handlePage(WebRequest &req, WebResponse &res)
 void FileTransferWebClient::collectScanHits()
 {
     auto *c = FileTransferClient::instance();
-    if (c->status().phase != FtcPhase::Scan) return;
+    const auto &st = c->status();
+    if (st.phase != FtcPhase::Scan)
+    {
+        // The sweep just ended: remember that it reached its end and keep the last progress pair, so a
+        // page opened afterwards still learns the outcome instead of seeing zeros.
+        if (_scanWasRunning)
+        {
+            _scanWasRunning = false;
+            _scanDone = st.ok;
+        }
+        return;
+    }
+    if (!_scanWasRunning)
+    {
+        // A sweep started that this class did not start (console `ftc scan`): its hits would otherwise
+        // be appended to the list of the previous one, and both would be shown as the last search.
+        _scanWasRunning = true;
+        _scanDone = false;
+        _scanHits.clear();
+        _scanWasRunning = true; // this class starts it: do not let collectScanHits() clear it again
+        _scanDone = false;
+        _scanLastDone = _scanLastTotal = 0;
+    }
+    _scanLastDone = st.done;
+    _scanLastTotal = st.total;
     for (const FtcEntry &e : c->listing())
     {
         const uint16_t pa = parsePa(e.name); // the sweep stores the PA as text in name[]
@@ -105,11 +129,15 @@ void FileTransferWebClient::collectScanHits()
             if (h.pa == pa)
             {
                 h.openKnx = h.openKnx || e.isOpenKnx; // the flag arrives in the post-sweep probe
+                if (e.okId[0] && !h.okId[0]) strncpy(h.okId, e.okId, sizeof(h.okId) - 1);
                 seen = true;
                 break;
             }
         if (!seen && _scanHits.size() < SCAN_HIT_MAX)
-            _scanHits.push_back({pa, (uint16_t)e.crc, e.isOpenKnx}); // the sweep parks the mask in crc
+        {
+            _scanHits.push_back({pa, (uint16_t)e.crc, e.isOpenKnx, {0}}); // the sweep parks the mask in crc
+            strncpy(_scanHits.back().okId, e.okId, sizeof(_scanHits.back().okId) - 1);
+        }
     }
 }
 
@@ -214,17 +242,22 @@ void FileTransferWebClient::handleStatus(WebRequest &req, WebResponse &res)
     }
 
     snprintf(buf, sizeof(buf),
-             ",\"scan\":{\"running\":%s,\"found\":%u,\"at\":\"%s\",\"done\":%u,\"total\":%u,\"hits\":[",
-             s.phase == FtcPhase::Scan ? "true" : "false", (unsigned)c->scanFound(),
+             ",\"scan\":{\"running\":%s,\"complete\":%s,\"found\":%u,\"max\":%u,\"at\":\"%s\","
+             "\"done\":%u,\"total\":%u,\"hits\":[",
+             s.phase == FtcPhase::Scan ? "true" : "false",
+             // Whether the sweep ran to its end is the device's fact: a page that reloads mid-scan has
+             // no way to know it otherwise, and that is exactly the case this view advertises.
+             (s.phase != FtcPhase::Scan && _scanDone) ? "true" : "false",
+             (unsigned)c->scanFound(), (unsigned)SCAN_HIT_MAX,
              paText(c->scanCurrentPa()).c_str(),
-             (unsigned)(s.phase == FtcPhase::Scan ? s.done : 0),
-             (unsigned)(s.phase == FtcPhase::Scan ? s.total : 0));
+             (unsigned)(s.phase == FtcPhase::Scan ? s.done : _scanLastDone),
+             (unsigned)(s.phase == FtcPhase::Scan ? s.total : _scanLastTotal));
     out += buf;
     for (size_t i = 0; i < _scanHits.size(); i++)
     {
-        snprintf(buf, sizeof(buf), "%s{\"pa\":\"%s\",\"mask\":%u,\"ok\":%s}", i ? "," : "",
+        snprintf(buf, sizeof(buf), "%s{\"pa\":\"%s\",\"mask\":%u,\"ok\":%s,\"id\":\"%s\"}", i ? "," : "",
                  paText(_scanHits[i].pa).c_str(), (unsigned)_scanHits[i].mask,
-                 _scanHits[i].openKnx ? "true" : "false");
+                 _scanHits[i].openKnx ? "true" : "false", jsonEsc(_scanHits[i].okId).c_str());
         out += buf;
     }
     out += "]}";
@@ -527,8 +560,28 @@ void FileTransferWebClient::handleAction(WebRequest &req, WebResponse &res)
         const bool area = req.getQueryParam("scope") == "area";
         const uint16_t start = area ? (uint16_t)((a << 12) | 0x0001) : (uint16_t)((a << 12) | (l << 8) | 0x01);
         const uint16_t end = area ? (uint16_t)((a << 12) | 0x0FFF) : (uint16_t)((a << 12) | (l << 8) | 0xFF);
+        // Completeness is the promise of this sweep, not an option: a single pass loses answers to
+        // multicast/coupler drops, so the page always asks for the deep scan (several passes -> union,
+        // plus the ack-only addresses recorded after the last pass). The knobs only tune how deep.
+        // kind=ets runs the connection-oriented sweep instead: one T_Connect per address, which reaches
+        // BCU1/BCU2 devices that never answer a connectionless DeviceDescriptor_Read. It forces one pass.
+        const bool co = req.getQueryParam("kind") == "ets";
+        const std::string sws = req.getQueryParam("sweeps"), tmos = req.getQueryParam("tmo"),
+                          paces = req.getQueryParam("pace");
+        unsigned sw = sws.empty() ? 2u : (unsigned)atoi(sws.c_str());
+        if (sw < 1) sw = 1;
+        if (sw > 3) sw = 3;
+        // 0 keeps the driver default; clamp the rest so a hand-typed value cannot stall the sweep.
+        unsigned tmo = tmos.empty() ? 0u : (unsigned)atoi(tmos.c_str());
+        if (tmo && tmo < 50) tmo = 50;
+        if (tmo > 2000) tmo = 2000;
+        unsigned pace = paces.empty() ? 0u : (unsigned)atoi(paces.c_str());
+        if (pace > 1000) pace = 1000;
         _scanHits.clear();
-        c->requestScan(start, end, area ? "Bereich" : "Linie", 1, false, true);
+        // info = true runs the FULL probe on every System B hit: it reads order number and version, which
+        // is what lets the list name an OpenKNX device instead of only flagging it.
+        c->requestScan(start, end, area ? "Bereich" : "Linie", (uint8_t)sw, co, true, true, nullptr,
+                       pace, 0, tmo);
     }
     res.setContentType("text/plain");
     res.send("OK");

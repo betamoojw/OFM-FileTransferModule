@@ -83,6 +83,8 @@ table.tight td, table.tight th { padding:5px 8px; font-size:.9em; }
 .scan { border:1px solid #e6e6e6; background:#fff; padding:10px 12px; margin-top:10px; }
 .scanbar { height:6px; background:#e4e4e4; margin:8px 0; }
 .scanbar i { display:block; height:100%; background:#449841; width:0; transition:width .2s linear; }
+/* The hit rows use .k for their placeholders, which is only styled inside .ctx/.ready. */
+.hits .k { color: #888; }
 .hits { max-height:190px; overflow:auto; border:1px solid #eee; }
 .hits table { margin:0; }
 .gabox { max-height:230px; overflow:auto; border:1px solid #eee; }

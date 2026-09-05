@@ -11,7 +11,7 @@ const otaNorm = p => {
 // The markup lives here, not as a C++ literal: in the gzipped asset the same text costs a third.
 // The three build switches arrive as data attributes on the shell.
 const OTA_HTML = {
- A: `<h1>knxOTA</h1><p class='lead'>Firmware oder Differenz von diesem Gerät über KNX auf ein anderes übertragen — PA zu PA, ohne PC.</p><div class='ctx'><div class='ctx-line'><span><span class='k'>Ziel</span> <b id='cxTarget'>—</b> <span id='cxDev' class='k'></span></span><span><span class='k'>Zugriff:</span> <b id='cxAcc'>unbekannt</b> <span class='k' id='cxAccAge'></span></span><span><span class='k'>Datei</span> <b id='cxFile'>keine</b></span><span class='cx-run'><span class='k'>Interface:</span> <b id='cxBus'>nichts läuft</b></span></div><div class='ctx-prog fm-hidden' id='cxProgWrap'><div class='ctx-bar'><i id='cxBar'></i></div><span class='k' id='cxLeft'></span><button class='mini' id='cxStop'>Abbrechen</button></div></div><details class='log' id='logBox'><summary><span id='logSum'>Protokoll</span></summary><div class='logbox' id='otaLog'><div>bereit</div></div></details><div class='fm-tabs steps' id='steps'><a class='fm-tab active' href='#' data-step='1'><span class='n'>1</span>Ziel<span class='st' id='stp1'></span></a><a class='fm-tab' href='#' data-step='2'><span class='n'>2</span>Auftrag<span class='st' id='stp2'></span></a><a class='fm-tab' href='#' data-step='3'><span class='n'>3</span>Übertragen<span class='st' id='stp3'></span></a></div><p class='ota-hint warn' id='stepNote'></p><section class='reg pane' id='pane1'><h2>Ziel<span class='sub'>wer, was, und ob es schreiben lässt</span></h2><div class='body'><div class='sec'><div class='fm-row' style='margin:0'><input type='text' id='otaPa' value='' placeholder='z. B. 5.0.3' style='flex:0 0 120px;min-width:120px'><button id='otaRead'>Gerät lesen</button><button class='mini' id='otaSearchToggle'>Andere Adresse suchen</button></div><p class='ota-hint' id='otaPaNote'></p><div class='drawer fm-hidden' id='otaDrawer'><div class='fm-row' style='margin:0'><span class='lbl'>Bereich</span><input type='text' id='otaArea' value='1' style='flex:0 0 54px;min-width:54px'><span class='lbl'>Linie</span><input type='text' id='otaLine' value='1' style='flex:0 0 54px;min-width:54px'><select id='otaScope' style='height:34px;border:1px solid #d0d0d0;padding:0 8px'><option value='line'>nur diese Linie</option><option value='area'>alle 16 Linien dieses Bereichs</option></select><button id='otaScan'>Suche starten</button><button class='mini' id='otaFromPa'>vom Ziel übernehmen</button></div><p class='ota-hint' id='otaScanRange'></p><div class='scan fm-hidden' id='otaScanBox'><div class='fm-row' style='margin:0'><b style='font-size:.9em' id='otaScanTitle'>Suche</b><span class='ota-hint' style='margin:0;flex:1' id='otaScanState'></span><button class='mini' id='otaScanStop'>Suche beenden</button></div><div class='scanbar'><i id='otaScanBar'></i></div><div class='hits fm-hidden' id='otaHitBox'><table class='tight'><thead><tr><th>Adresse</th><th>Art</th><th class='right'></th></tr></thead><tbody id='otaHits'></tbody></table></div><p class='ota-hint' id='otaScanFoot'></p></div></div></div><div class='sec'><div id='otaDevEmpty'><p class='ota-hint' style='margin:0'>Noch nicht gelesen.</p></div><div id='otaDevNone' class='fm-hidden'><p class='ota-hint err' style='margin:0'>Keine Antwort von <span id='otaDevNonePa'></span>. Prüfen Sie Adresse und Busspannung.</p></div><div id='otaDevCard' class='fm-hidden'><div class='runhead'><span class='t' id='otaDevHead'></span><span class='stale' id='otaDevAge'></span></div><div class='caps' id='otaDevCaps'></div><div class='fm-row' style='margin:10px 0 0'><span class='lbl'>Programmiermodus</span><b id='otaPmText' style='font-size:.88em'>nicht gelesen</b><button class='mini' id='otaPm'>einschalten</button><button class='mini' id='otaProps'>Eigenschaften</button><button class='mini' id='otaMore'>Weitere Angaben</button></div><p class='ota-hint' id='otaPmNote' style='margin:6px 0 0'></p><table class='attribute-table tight fm-hidden' id='otaTProps'><tbody id='otaDevRows'></tbody></table><table class='attribute-table tight fm-hidden' id='otaTMore'><tbody id='otaDevRows2'></tbody></table></div></div><div class='sec'><h3>Zugriff</h3><div class='fm-row' style='margin:0'><span id='otaAccText'>noch nicht gelesen</span><span class='stale' id='otaAccAge'></span></div>`,
+ A: `<h1>knxOTA</h1><p class='lead'>Firmware oder Differenz von diesem Gerät über KNX auf ein anderes übertragen — PA zu PA, ohne PC.</p><div class='ctx'><div class='ctx-line'><span><span class='k'>Ziel</span> <b id='cxTarget'>—</b> <span id='cxDev' class='k'></span></span><span><span class='k'>Zugriff:</span> <b id='cxAcc'>unbekannt</b> <span class='k' id='cxAccAge'></span></span><span><span class='k'>Datei</span> <b id='cxFile'>keine</b></span><span class='cx-run'><span class='k'>Interface:</span> <b id='cxBus'>nichts läuft</b></span></div><div class='ctx-prog fm-hidden' id='cxProgWrap'><div class='ctx-bar'><i id='cxBar'></i></div><span class='k' id='cxLeft'></span><button class='mini' id='cxStop'>Abbrechen</button></div></div><details class='log' id='logBox'><summary><span id='logSum'>Protokoll</span></summary><div class='logbox' id='otaLog'><div>bereit</div></div></details><div class='fm-tabs steps' id='steps'><a class='fm-tab active' href='#' data-step='1'><span class='n'>1</span>Ziel<span class='st' id='stp1'></span></a><a class='fm-tab' href='#' data-step='2'><span class='n'>2</span>Auftrag<span class='st' id='stp2'></span></a><a class='fm-tab' href='#' data-step='3'><span class='n'>3</span>Übertragen<span class='st' id='stp3'></span></a></div><p class='ota-hint warn' id='stepNote'></p><section class='reg pane' id='pane1'><h2>Ziel<span class='sub'>wer, was, und ob es schreiben lässt</span></h2><div class='body'><div class='sec'><div class='fm-row' style='margin:0'><input type='text' id='otaPa' value='' placeholder='z. B. 5.0.3' style='flex:0 0 120px;min-width:120px'><button id='otaRead'>Gerät lesen</button><button class='mini' id='otaSearchToggle'>Andere Adresse suchen</button></div><p class='ota-hint' id='otaPaNote'></p><div class='drawer fm-hidden' id='otaDrawer'><div class='fm-row' style='margin:0'><span class='lbl'>Bereich</span><input type='text' id='otaArea' value='1' style='flex:0 0 54px;min-width:54px'><span class='lbl'>Linie</span><input type='text' id='otaLine' value='1' style='flex:0 0 54px;min-width:54px'><select id='otaScope' style='height:34px;border:1px solid #d0d0d0;padding:0 8px'><option value='line'>nur diese Linie</option><option value='area'>alle 16 Linien dieses Bereichs</option></select><select id='otaKind' style='height:34px;border:1px solid #d0d0d0;padding:0 8px'><option value='oknx'>OpenKNX zuerst</option><option value='all'>nach Adresse</option><option value='ets'>wie ETS &mdash; findet auch BCU1/BCU2</option><option value='custom'>eigene Parameter &hellip;</option></select><button id='otaScan'>Suche starten</button></div><p class='ota-hint' id='otaScanRange'></p><div class='fm-row fm-hidden' id='otaParams' style='margin:0 0 8px'><span class='lbl'>Antwortfenster</span><input type='number' id='otaTmo' value='250' min='0' max='2000' step='50' style='flex:0 0 74px;min-width:74px'><span class='lbl' style='flex:0 0 auto'>ms</span><span class='lbl'>Durchläufe</span><input type='number' id='otaSweeps' value='2' min='1' max='3' style='flex:0 0 64px;min-width:64px'><span class='lbl'>Abstand</span><input type='number' id='otaPace' value='0' min='0' max='1000' step='10' style='flex:0 0 74px;min-width:74px'><span class='lbl' style='flex:0 0 auto'>ms &middot; 0 = Vorgabe</span></div><div class='scan fm-hidden' id='otaScanBox'><div class='fm-row' style='margin:0'><b style='font-size:.9em' id='otaScanTitle'>Suche</b><span class='ota-hint' style='margin:0;flex:1' id='otaScanState'></span></div><div class='scanbar'><i id='otaScanBar'></i></div><div class='hits fm-hidden' id='otaHitBox'><table class='tight'><thead><tr><th>Übernehmen</th><th>Adresse</th><th>Art</th><th>OpenKNX</th></tr></thead><tbody id='otaHits'></tbody></table></div><p class='ota-hint' id='otaScanFoot'></p></div></div></div><div class='sec'><div id='otaDevEmpty'><p class='ota-hint' style='margin:0'>Noch nicht gelesen.</p></div><div id='otaDevNone' class='fm-hidden'><p class='ota-hint err' style='margin:0'>Keine Antwort von <span id='otaDevNonePa'></span>. Prüfen Sie Adresse und Busspannung.</p></div><div id='otaDevCard' class='fm-hidden'><div class='runhead'><span class='t' id='otaDevHead'></span><span class='stale' id='otaDevAge'></span></div><div class='caps' id='otaDevCaps'></div><div class='fm-row' style='margin:10px 0 0'><span class='lbl'>Programmiermodus</span><b id='otaPmText' style='font-size:.88em'>nicht gelesen</b><button class='mini' id='otaPm'>einschalten</button><button class='mini' id='otaProps'>Eigenschaften</button><button class='mini' id='otaMore'>Weitere Angaben</button></div><p class='ota-hint' id='otaPmNote' style='margin:6px 0 0'></p><table class='attribute-table tight fm-hidden' id='otaTProps'><tbody id='otaDevRows'></tbody></table><table class='attribute-table tight fm-hidden' id='otaTMore'><tbody id='otaDevRows2'></tbody></table></div></div><div class='sec'><h3>Zugriff</h3><div class='fm-row' style='margin:0'><span id='otaAccText'>noch nicht gelesen</span><span class='stale' id='otaAccAge'></span></div>`,
  SEC: `<div class='fm-row fm-hidden' id='otaLockRow' style='margin-top:8px'><input type='password' id='otaPw' placeholder='Passwort des Ziels' autocomplete='off' style='flex:0 0 210px;min-width:170px'><button id='otaUnlock'>Entsperren</button><button id='otaLock'>Abmelden</button><button class='mini' id='otaCheck'>Zugriff prüfen</button></div>`,
  B: `<p class='ota-hint fm-hidden' id='otaAccHint'></p></div><div class='sec'><div class='fm-row' style='margin:0'><span class='lbl' style='flex:0 0 150px'>Letzte Suche</span><span style='font-size:.88em;flex:1' id='otaLastScan'>keine</span></div><div class='fm-row' style='margin:6px 0 0'><span class='lbl' style='flex:0 0 150px'>Gruppenadressen</span><span style='font-size:.88em;flex:1' id='otaGaState'>erst das Gerät lesen</span><button class='mini' id='otaGa'>Lesen</button></div><details class='ga fm-hidden' id='otaGaBox' style='margin-top:8px'><summary id='otaGaSum'></summary><div class='gabox'><table class='tight'><thead><tr><th>GA</th><th>KO</th><th>Flags</th><th>Priorität</th><th>Größe</th></tr></thead><tbody id='otaGaRows'></tbody></table></div></details></div></div></section><section class='reg pane fm-hidden' id='pane2'><h2>Auftrag<span class='sub'>was gesendet wird und wie</span></h2><div class='body'><div class='sec'><h3>Art</h3><div class='fm-tabs' style='margin-bottom:12px'><a class='fm-tab active' href='#' data-job='full'>Voll-Abbild</a><a class='fm-tab' href='#' data-job='delta'>Differenz</a><a class='fm-tab' href='#' data-job='perf'>Durchsatz</a></div><p class='ota-hint' style='margin:0' id='otaJobNote'></p></div><div class='sec'><h3>Quelle</h3><div id='otaFile'><div class='fm-tabs' style='border:none;margin-bottom:8px'><a class='fm-tab active' href='#' data-otafs='int'>/flash</a>`,
  SD: `<a class='fm-tab' href='#' data-otafs='sd'>sd/</a>`,
@@ -34,6 +34,9 @@ let otaDev = null, otaDevPa = "", otaDevAt = 0, otaDevMiss = false;
 let otaAccAt = 0, otaPmGuess = null;
 let otaDrv = null, otaDrvPa = "", otaDrvChain = [];
 let otaHits = [], otaScanWhen = "", otaScanLabel = "", otaScanDone = 0, otaScanTotal = 0;
+// From the device, not counted here: hits are capped, and "complete" survives a page reload.
+let otaScanFound = 0, otaScanMax = 0, otaScanComplete = false;
+let otaScanning = false;   // sweep running on the interface -> the start button becomes the cancel
 let otaGa = null, otaGaAt = "", otaMsg = "", otaLogN = 0;
 let otaT0 = 0, otaD0 = 0, otaAvg = 0, otaFailCheck = false;
 let otaSentFile = "", otaSentPa = ""; // what was actually transferred -- the apply hangs off this
@@ -132,7 +135,8 @@ async function otaArm(id, path, params, body) {
   }
 }
 function otaGate(on) {
-  OTA_ACT.forEach(id => { const e = _o(id); if (e) e.disabled = on; });
+  // While the sweep runs its button IS the cancel, so gating it would trap the user.
+  OTA_ACT.forEach(id => { const e = _o(id); if (e && !(on && otaScanning && id === "otaScan")) e.disabled = on; });
   document.querySelectorAll("[data-job],[data-otafs]").forEach(t => {
     t.style.pointerEvents = on ? "none" : "";
     t.style.opacity = on ? ".45" : "";
@@ -177,11 +181,46 @@ function otaSetJob(j) {
   if (j !== "perf") otaLoadFiles(); else otaRender();
 }
 // ── The sweep: its own range, independent of the target ─────────────────────────────────────────
+// The search kind: a view filter (oknx) or a different sweep on the device (ets), plus the manual knobs.
+function otaScanKind() { const e = _o("otaKind"); return e ? e.value : "oknx"; }
+// How many passes the device will really run. 'ets' is one connection-oriented pass, 'custom' is what
+// the field says (the device clamps to 1..3), everything else is the default of two.
+function otaSweeps() {
+  if (otaScanKind() === "ets") return 1;
+  if (otaScanKind() !== "custom") return 2;
+  return Math.min(3, Math.max(1, parseInt(_o("otaSweeps") && _o("otaSweeps").value) || 2));
+}
+function otaPaceMs() {
+  return otaScanKind() === "custom"
+    ? Math.min(1000, Math.max(0, parseInt(_o("otaPace") && _o("otaPace").value) || 0)) : 0;
+}
+// The identity string comes off the bus: escape it before it reaches innerHTML.
+function otaEsc(t) {
+  return String(t).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+}
+// Area/line follow the target address; a manual edit of either field wins until the target is typed
+// again. Declared at module scope: the hit list calls it too, from otaRender().
+function otaSyncRange() {
+  // A running sweep owns the range fields: writing them here would show a range that is not being scanned.
+  if (_o("otaArea") && _o("otaArea").disabled) return;
+  const n = otaNorm(_o("otaPa").value);
+  if (!n) return;
+  const p = n.split(".");
+  _o("otaArea").value = p[0]; _o("otaLine").value = p[1];
+  otaRender();
+}
+// Rough estimate from what actually runs: passes and the extra pause per address both scale it.
+function otaScanEta(sp) {
+  const perAddr = 0.55 + otaPaceMs() / 1000; // seconds, measured order of magnitude for one probe
+  const min = Math.round(sp.count * perAddr * otaSweeps() / 60);
+  return min < 2 ? "unter 2 min" : (Math.max(1, Math.round(min * 0.8)) + "–" + Math.round(min * 1.3) + " min");
+}
 function otaScanSpec() {
   const a = Math.min(15, Math.max(0, parseInt(_o("otaArea").value) || 0));
   const l = Math.min(15, Math.max(0, parseInt(_o("otaLine").value) || 0));
   const area = _o("otaScope").value === "area";
-  return { a, l, area, label: area ? (a + ".*") : (a + "." + l), count: area ? 16 * 255 : 255 };
+  // 4095, not 16*255: the device sweeps 0x0001..0x0FFF, which includes the .0 of every line.
+  return { a, l, area, label: area ? (a + ".*") : (a + "." + l), count: area ? 4095 : 255 };
 }
 // ── The target's drives: three separate commands, chained by the browser ────────────────────────
 function otaProbeDrives() {
@@ -221,7 +260,10 @@ function otaApply(s) {
   if (s.ga) { otaGa = s.ga.lost ? null : (s.ga.pa === pa ? s.ga.rows : otaGa); otaGaLost = s.ga.lost; }
   if (s.scan) {
     otaScanDone = s.scan.done; otaScanTotal = s.scan.total;
-    if (s.scan.hits && s.scan.hits.length) otaHits = s.scan.hits;
+    if (s.scan.hits) otaHits = s.scan.hits; // an empty list is a result too: the device rescanned
+    otaScanFound = s.scan.found || 0;
+    otaScanMax = s.scan.max || 0;
+    otaScanComplete = !!s.scan.complete;
   }
   if (s.message && s.message !== otaMsg) { otaMsg = s.message; otaLog(s.message); }
   // Samples for the curve: one per poll while a transfer runs.
@@ -664,6 +706,12 @@ _o("otaDevHead").textContent = pa
     : !(otaDev.feat & 0x20) ? ((otaDev.feat & 0x10) ? "Angemeldet."
                             : "Das Ziel verlangt kein Passwort.")
     : "Nimmt keine Schreibvorgänge an.";
+  // The access line carries the verdict, so it carries the colour: refused writes red, an open
+  // session green. Not-yet-read stays neutral -- an unknown state is not a good one.
+  _o("otaAccText").className =
+    !(fresh && otaDev.ftm) ? ""
+    : (otaDev.feat & 0x20) ? "ota-err"
+    : (otaDev.feat & 0x10) ? "ota-ok" : "";
   _o("otaAccAge").textContent = otaAccAt ? ("Stand: " + otaAgo(otaAccAt)) : "";
   const needPw = !!(fresh && otaDev.ftm && (otaDev.feat & 0x10));
   const progGate = !!(fresh && otaDev.ftm && !needPw && (otaDev.feat & 0x20));
@@ -680,42 +728,84 @@ _o("otaDevHead").textContent = pa
   _o("otaScanRange").textContent = (sp.area
     ? (sp.a + ".0.1 – " + sp.a + ".15.255 · alle 16 Linien · " + sp.count + " Adressen")
     : (sp.a + "." + sp.l + ".1 – " + sp.a + "." + sp.l + ".255 · " + sp.count + " Adressen"))
-    + " · etwa " + (sp.area ? "20–30 min" : "1–2 min");
+    + " · etwa " + otaScanEta(sp)
+    + (otaScanKind() === "ets"
+        ? " · ein verbindungsorientierter Durchlauf, erreicht auch BCU1/BCU2"
+        : " · " + (otaSweeps() === 1 ? "ein Durchlauf" : otaSweeps() + " Durchläufe")
+          + ", findet jedes antwortende Gerät");
+  const parEl = _o("otaParams");
+  if (parEl) parEl.classList.toggle("fm-hidden", otaScanKind() !== "custom");
+  // The sweep runs on the interface with the values it was started with, so changing them mid-run would
+  // describe a search that is not the one in progress. Locked until it finishes or is cancelled.
   const scanning = s.scan && s.scan.running;
+  ["otaArea", "otaLine", "otaScope", "otaKind", "otaTmo", "otaSweeps", "otaPace"]
+    .forEach(id => { const e = _o(id); if (e) e.disabled = scanning; });
   _o("otaScanBox").classList.toggle("fm-hidden", !(scanning || otaHits.length));
   _o("otaScanTitle").textContent = "Suche " + (otaScanLabel || sp.label);
-  _o("otaScanStop").classList.toggle("fm-hidden", !scanning);
+  // One button does both. The sweep runs on the interface, not here, so it must stay clickable
+  // instead of spinning as "busy" for the minutes the sweep takes.
+  otaScanning = scanning;
+  const scanBtn = _o("otaScan");
+  if (scanBtn) {
+    scanBtn.textContent = scanning ? "Suche abbrechen" : "Suche starten";
+    if (scanning) { scanBtn.classList.remove("busy"); scanBtn.disabled = false; }
+  }
   _o("otaScanBar").style.width = (otaScanTotal ? (otaScanDone / otaScanTotal * 100) : 0) + "%";
   _o("otaScanState").textContent = scanning
-    ? (otaScanDone + " von " + otaScanTotal + " geprüft · " + otaHits.length + " gefunden · bei " + (s.scan.at || ""))
-    : (otaScanWhen ? ("beendet " + otaScanWhen + " · " + otaHits.length + " Geräte") : "");
+    ? (otaScanDone + " von " + otaScanTotal + " geprüft · " + otaScanFound + " gefunden · bei " + (s.scan.at || ""))
+    : (otaScanComplete ? ("beendet" + (otaScanWhen ? " " + otaScanWhen : "") + " · " + otaScanFound + " Geräte")
+                       : (otaHits.length ? (otaScanFound + " Geräte aus der letzten Suche") : ""));
   _o("otaScanFoot").textContent = scanning
-    ? "Eine Linie dauert 1–2 min. Läuft auf dem Interface weiter."
-    : "Treffer bleiben bis zur nächsten Suche.";
+    ? ((otaScanKind() === "ets" ? "Ein verbindungsorientierter Durchlauf"
+                                : (otaSweeps() === 1 ? "Ein Durchlauf" : otaSweeps() + " Durchläufe"))
+       + " über den Bereich. Läuft auf dem Interface weiter.")
+    : (otaScanComplete
+        ? ("Vollständig · " + otaScanFound + " gefunden, davon "
+           + otaHits.filter(h => h.ok).length + " OpenKNX"
+           + (otaScanMax && otaScanFound > otaHits.length
+                ? " · nur " + otaHits.length + " von " + otaScanFound + " werden gezeigt (Liste hält " + otaScanMax + ")"
+                : "")
+           + ". Treffer bleiben bis zur nächsten Suche.")
+        : "Treffer bleiben bis zur nächsten Suche.");
   _o("otaHitBox").classList.toggle("fm-hidden", !otaHits.length);
   const hb = _o("otaHits");
   hb.innerHTML = "";
-  otaHits.forEach(h => {
+  // Nothing is ever hidden: the post-sweep probe does not flag every hit, so filtering would drop
+  // real devices while the counter still reports them. "OpenKNX-Geräte" sorts them to the top instead.
+  const paNum = p => { const q = String(p).split("."); return ((+q[0] << 12) | (+q[1] << 8) | (+q[2] || 0)); };
+  const shown = otaHits.slice().sort((x, y) =>
+    (otaScanKind() === "oknx" ? ((y.ok ? 1 : 0) - (x.ok ? 1 : 0)) : 0) || (paNum(x.pa) - paNum(y.pa)));
+  shown.forEach(h => {
     const tr = document.createElement("tr");
-    tr.innerHTML = '<td class="mono">' + h.pa + '</td><td>' + otaClass(h.mask)
-      + (h.ok ? ' <span class="ota-ok">· OpenKNX</span>' : '') + '</td>';
-    const td = document.createElement("td");
-    td.className = "right";
-    const b = document.createElement("button");
-    b.className = "mini"; b.textContent = "Übernehmen";
-    b.onclick = () => {
+    // The action comes first: the list is read to pick a target, not to study it.
+    const tdA = document.createElement("td");
+    const bt = document.createElement("button");
+    bt.className = "mini"; bt.textContent = "Übernehmen";
+    bt.onclick = () => {
       _o("otaPa").value = h.pa;
       otaDev = null; otaDevMiss = false; otaDevAt = 0; otaDrv = null; otaGa = null;
       otaLog("Ziel " + h.pa + " übernommen");
+      otaSyncRange();
       otaRender();
     };
-    td.appendChild(b); tr.appendChild(td); hb.appendChild(tr);
+    tdA.appendChild(bt);
+    tr.appendChild(tdA);
+    const rest = document.createElement("template");
+    rest.innerHTML = '<td class="mono">' + h.pa + '</td><td>' + otaClass(h.mask)
+      + '</td><td>' + (h.ok ? ('<span class="ota-ok">' + otaEsc(h.id || "OpenKNX") + '</span>')
+                            : (scanning ? '<span class="k">wird geprüft</span>' : '<span class="k">—</span>')) + '</td>';
+    while (rest.content.firstChild) tr.appendChild(rest.content.firstChild);
+    hb.appendChild(tr);
   });
-  _o("otaLastScan").textContent = otaScanWhen ? ((otaScanLabel || sp.label) + " · " + otaScanWhen + " · " + otaHits.length + " Geräte") : "keine";
+  _o("otaLastScan").textContent = (otaScanComplete || otaHits.length)
+    ? ((otaScanLabel || sp.label) + (otaScanWhen ? " · " + otaScanWhen : "") + " · " + otaScanFound + " Geräte")
+    : "keine";
   // Group addresses
-  _o("otaGa").disabled = otaBusy || !(fresh && otaDev.ftm);
+  // The table walk is the ETS path -- device-info discovery for the table objects, then A_Memory_Read of
+  // the address + association tables. It needs no FileTransfer module and works on foreign classic devices,
+  // so the only precondition is a device that answered.
+  _o("otaGa").disabled = otaBusy || !fresh;
   _o("otaGaState").textContent = !fresh ? "erst das Gerät lesen"
-    : !otaDev.ftm ? "nicht anwendbar"
     : otaGaLost ? "verworfen durch eine fast-Übertragung — erneut lesen"
     : otaGa === null ? "nicht gelesen — eigener Buslauf, 1–3 min"
     : otaGa.length === 0 ? ("gelesen " + otaGaAt + " — 0 Einträge (das Gerät führt keine Gruppenadressen)")
@@ -891,19 +981,25 @@ function otaInit() {
     d.classList.toggle("fm-hidden");
     _o("otaSearchToggle").textContent = d.classList.contains("fm-hidden") ? "Andere Adresse suchen" : "Suche schließen";
   };
-  _o("otaFromPa").onclick = () => {
-    const n = otaNorm(_o("otaPa").value);
-    if (!n) return;
-    const p = n.split(".");
-    _o("otaArea").value = p[0]; _o("otaLine").value = p[1];
-    otaRender();
-  };
+  _o("otaPa").addEventListener("input", otaSyncRange);
   _o("otaScan").onclick = () => {
+    if (otaScanning) { otaPost("cancel", {}); return; }   // same button cancels the running sweep
     const sp = otaScanSpec();
     otaHits = []; otaScanLabel = sp.label; otaScanWhen = "";
-    otaArm("otaScan", "scan", { pa: _o("otaPa").value, area: sp.a, line: sp.l, scope: sp.area ? "area" : "line" });
+    otaScanFound = 0; otaScanComplete = false;
+    otaScanning = true; // the sweep is ours from the click on; do not blank the button until the poll
+    otaRender(); // otherwise the previous result stays on screen until the next poll
+    const kind = _o("otaKind") ? _o("otaKind").value : "oknx";
+    const q = { pa: _o("otaPa").value, area: sp.a, line: sp.l, scope: sp.area ? "area" : "line", kind: kind };
+    if (kind === "custom") {
+      // Clamp here as well and write the result back, so the value sent is the value on screen. The
+      // device clamps too, but silently - the page would otherwise promise something else than it got.
+      const tmo = Math.min(2000, Math.max(0, parseInt(_o("otaTmo").value) || 0));
+      q.sweeps = otaSweeps(); q.tmo = tmo === 0 ? 0 : Math.max(50, tmo); q.pace = otaPaceMs();
+      _o("otaSweeps").value = q.sweeps; _o("otaTmo").value = q.tmo; _o("otaPace").value = q.pace;
+    }
+    otaArm("otaScan", "scan", q);
   };
-  _o("otaScanStop").onclick = () => otaPost("cancel", {});
   _o("otaPm").onclick = () => {
     const on = otaPmGuess !== null ? otaPmGuess : !!(otaDev && otaDev.prog);
     otaPmWrite(!on);
@@ -960,7 +1056,7 @@ function otaInit() {
     _o("otaCheck").onclick = () => otaArm("otaRead", "feat", { pa: _o("otaPa").value });
     _o("otaPw").onkeydown = e => { if (e.key === "Enter") unlock.click(); };
   }
-  ["otaArea", "otaLine", "otaScope", "otaKb", "otaDst", "otaWin", "otaApply", "otaResume", "otaKeep", "otaDrive"]
+  ["otaArea", "otaLine", "otaScope", "otaKind", "otaKb", "otaDst", "otaWin", "otaApply", "otaResume", "otaKeep", "otaDrive"]
     .forEach(id => { const e = _o(id); if (!e) return; e.onchange = otaRender; if (e.tagName === "INPUT") e.oninput = otaRender; });
   _o("logBox").open = false;
   otaSetJob("full");

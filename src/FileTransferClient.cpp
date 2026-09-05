@@ -718,14 +718,16 @@ void FileTransferClient::requestScan(uint16_t startPa, uint16_t endPa, const cha
     _scanConTmoMs = tmoMs ? tmoMs : FTC_SCAN_CON_TMO_MS;
 
     ftcStatusReset(FtcPhase::Scan, 0, "");
-    _status.total = (uint32_t)(endPa - startPa) + 1;
+    // _scanProbed counts every probe SENT and is never reset between deep passes, so the denominator
+    // is the range times the passes -- otherwise a two-pass sweep reports "389 von 255 geprüft".
+    _status.total = ((uint32_t)(endPa - startPa) + 1) * (uint32_t)_scanSweeps;
     ftcStatusMsg("scanning...");
 
     openknx.logger.logWithPrefixAndValues("FTC", "scan %s: %u.%u.%u .. %u.%u.%u  (%u addresses, %u sweep(s), LowPriority)",
                                           _scanLabel,
                                           FTC_PA_ARGS(startPa),
                                           FTC_PA_ARGS(endPa),
-                                          (unsigned)_status.total, _scanSweeps);
+                                          (unsigned)((endPa - startPa) + 1), _scanSweeps);
     // Only a sweep that stays inside one line can use the bitmap, and the CO scan has its own evidence.
     _scanAckArmed = !_scanCo && (startPa >> 8) == (endPa >> 8);
     _scanAckIx = 0;
@@ -906,6 +908,27 @@ void FileTransferClient::ftcScanPostConsume()
     FtcEntry &e = _ftcListing[_scanOkIdx];
     const bool isOk = _scanProbeAnswered && (_devMfr == FTC_MFR_OPENKNX);
     e.isOpenKnx = isOk;
+    // Name the device where the FULL probe read its identity: "<order> <maj.min.rev>", trimmed of the
+    // padding dots the order number carries. Only for a confirmed OpenKNX device -- the field stays empty
+    // otherwise, which is what tells the frontend "flagged, but no identity read".
+    e.okId[0] = 0;
+    if (isOk && _scanInfo && _devHasOrder)
+    {
+        char nm[11] = {0};
+        for (uint8_t i = 0; i < 10; i++)
+            nm[i] = (_devOrder[i] >= 0x20 && _devOrder[i] < 0x7F) ? (char)_devOrder[i] : ' ';
+        for (int i = 9; i >= 0 && (nm[i] == ' ' || nm[i] == '.'); i--)
+            nm[i] = 0;
+        if (nm[0])
+        {
+            // Version first, name bounded by what is left: "%s %u.%u.%u" with a 10-char name and
+            // three-digit parts needs 28 bytes and would silently cut the version instead of the name.
+            char ver[16];
+            snprintf(ver, sizeof(ver), "%u.%u.%u", _devVerMaj, _devVerMin, _devVerRev);
+            const int room = (int)sizeof(e.okId) - 2 - (int)strlen(ver); // name + blank + version + NUL
+            snprintf(e.okId, sizeof(e.okId), "%.*s %s", room > 0 ? room : 0, nm, ver);
+        }
+    }
     if (isOk) openknx.logger.color(32); // green (ANSI SGR) for a confirmed OpenKNX device
     if (_scanInfo)
     {
@@ -5274,6 +5297,8 @@ void FileTransferClient::loopScan()
                 if (pa == 0 || pa == knx.individualAddress())
                 {
                     _scanNext++;
+                    _scanProbed++; // counted like any other address, or the bar never reaches its total
+                    _status.done = _scanProbed;
                     return;
                 } // never probe ourselves
                 if (_scanLastSend != 0 && millis() - _scanLastSend < FTC_CO_SETTLE_MS) return;
