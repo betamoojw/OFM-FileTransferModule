@@ -16,6 +16,12 @@ interface, and a repaired `fast` mode.
 * Feature: ESP32 OTA-slot safety guard — a single-app partition layout has no second slot, which is now checked before writing and reported through `CheckFeatures`
 
 **knxOTA**
+* Feature: a scan names what it found -- the FULL probe keeps order number and version per hit, so the list shows the device instead of only flagging it as OpenKNX. The identity comes off the bus and is escaped before it reaches the page
+* Feature: the search button starts and cancels the sweep; the separate stop button is gone, and the button stays clickable while the sweep runs on the device
+* Feature: the scan status reports whether the sweep ran to its end and keeps the last progress, so a page opened or reloaded afterwards still learns the outcome
+* Feature: sweep count, timeout and pace are taken from the request and clamped, so a hand-typed value cannot stall the sweep
+* Fix: the scan denominator is the range times the passes -- a two-pass sweep reported "389 of 255 checked", and skipped addresses now count as probed so the bar reaches its total
+* Fix: a sweep started from the console no longer appends its hits to the list of the previous one
 * Feature: knxOTA web page (`OPENKNX_FTC_KNXOTA_WEB`) — pick a target PA, read what the device is, send a firmware or a difference from this device's flash, SD or external flash over KNX, trigger the update, or measure throughput. The page is a front-end onto the embedded client, so no PC and no console are in the chain. 34732 B flash + 80 B RAM on RP2040, 40056 B + 64 B RAM on ESP32
 * Feature: an unfinished knxOTA run can be resumed instead of restarted
 * Fix: a refused firmware apply is reported instead of being announced as triggered — `FwUpdate` answers nothing on success but `0xA0`/`0xA2` when the security gate refuses it, and that answer was discarded
